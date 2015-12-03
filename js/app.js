@@ -166,6 +166,8 @@ $(document).ready(function(){
     if(!isMobileWidth()){ 
         $('.personna-section li:first-child a, .personna-section li:first-child article').addClass('active');
         $('#personna-section-3 > div, #personna-section-5 > div, #personna-section-6 > div').addClass('parcours-bg');
+    } else {
+        $("<style type='text/css'> #section-1 .inner-bg { transition: all .3s ease-in-out; } </style>").appendTo("head");
     }
     
     var headerAnimStart = function(){
@@ -221,8 +223,10 @@ $(document).ready(function(){
             scrollTop: 0
         }, 0);
         
-        $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p, #section-1-part-1 div'
-           + '#section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeOut(0);
+        $('#section-1-part-1, #section-1-part-1 .button, #section-1-part-2, #section-1-part-1 p, #section-1-part-1 div'
+           + '#section-1-part-2 p, #section-1-part-2 .button, #section-1-part-2 span, #section-1-part-2 small').fadeOut(0);
+           
+        $('#section-1-part-1, #section-1-part-1 p:eq(0), #section-1-part-1 .button').fadeIn(600);
 
         var $bgElement = $('#section-1 > .inner-bg'),
             bgZoomIncrease = .4,
@@ -233,8 +237,12 @@ $(document).ready(function(){
 
             if(windowScroll > 0) {
                 initialScroll = initialScrollLength + windowScroll;
+            } else if(initialScroll > initialScrollLength){
+                initialScroll = initialScrollLength;
             } else {
+                
                 var step;
+                console.log(e);
                 if(e.wheelDeltaY) {
                     step = e.wheelDeltaY;
                 } else if(e.deltaY) {
@@ -267,7 +275,7 @@ $(document).ready(function(){
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(5/6)) ) + ')');
                     $('#section-1-part-1').fadeOut(0);
                     $('#section-1-part-1 p').fadeIn(0);
-                    $('#section-1-part-2, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
+                    $('#section-1-part-2, #section-1-part-2 .button, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
                 } else if(initialScroll > (4/6) * initialScrollLength) {
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(4/6)) ) + ')');
                     $('#section-1-part-1').fadeOut(200);
@@ -278,21 +286,21 @@ $(document).ready(function(){
                     $('#section-1-part-2').fadeOut(0);
                     $('#section-1-part-1').fadeIn(200);
                     $('#section-1-part-1 p:eq(2)').fadeIn(600);
-                } else if (initialScroll > (2/6) * initialScrollLength) {
+                } else if (initialScroll > (1/6) * initialScrollLength) {
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(2/6)) ) + ')');
                     $('#section-1-part-1 p:eq(2):visible').fadeOut(600);
                     $('#section-1-part-1 p:eq(1)').fadeIn(600);
-                } else if (initialScroll > (1/12) * initialScrollLength) {
+                } else /* if (initialScroll > (1/12) * initialScrollLength)*/ {
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(1/12)) ) + ')');
                     $('#section-1-part-1 p:eq(1):visible').fadeOut(600);
                     $('#section-1-part-1').fadeIn(600);
-                    $('#section-1-part-1 p:eq(0)').fadeIn(600);
-                } else if( initialScroll < 5) {
+                    $('#section-1-part-1 p:eq(0), #section-1-part-1 .button').fadeIn(600);
+                } /* else if( initialScroll < 5) {
                     //$bgElement.css('transform', 'scale(1)');
                     
                     $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p,'
                         + '#section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeOut(200);
-                }
+                } */
             } else {
                 scrollEnabled = true;
                 if(!lastStepPassed) {
@@ -314,8 +322,14 @@ $(document).ready(function(){
 
         var body = $("body").get(0);
         if (body.addEventListener) {
-            body.addEventListener('mousewheel', mousewheel, false);
-            body.addEventListener("DOMMouseScroll", mousewheel, false);
+            if("onwheel" in document.createElement("div")) {
+                body.addEventListener('wheel', mousewheel, false);
+            } else if(document.onmousewheel !== undefined) {
+                body.addEventListener('mousewheel', mousewheel, false);
+            } else {
+                body.addEventListener("DOMMouseScroll", mousewheel, false);
+                body.addEventListener("MozMousePixelScroll", mousewheel, false);
+            }
         } else {
             body.attachEvent("onmousewheel", mousewheel);
         }
