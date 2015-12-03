@@ -7,6 +7,12 @@
 a=a||3;e=e||"";return function(g,k){var c=Math.floor(g).toString(),u=d(k.elem);if(c.length>a){for(var f=c,l=a,m=f.split("").reverse(),c=[],n,r,p,t=0,h=Math.ceil(f.length/l);t<h;t++){n="";for(p=0;p<l;p++){r=t*l+p;if(r===f.length)break;n+=m[r]}c.push(n)}f=c.length-1;l=q(c[f]);c[f]=q(parseInt(l,10).toString());c=c.join(b);c=q(c)}u.prop("number",g).text(c+e)}}}};d.fn.animateNumber=function(){for(var b=arguments[0],a=d.extend({},m,b),e=d(this),g=[a],k=1,c=arguments.length;k<c;k++)g.push(arguments[k]);
 if(b.numberStep){var h=this.each(function(){this._animateNumberSetter=b.numberStep}),f=a.complete;a.complete=function(){h.each(function(){delete this._animateNumberSetter});f&&f.apply(this,arguments)}}return e.animate.apply(e,g)}})(jQuery);
 
+/* Froogaloop */
+var Froogaloop=function(){function e(a){return new e.fn.init(a)}function g(a,c,b){if(!b.contentWindow.postMessage)return!1;a=JSON.stringify({method:a,value:c});b.contentWindow.postMessage(a,h)}function l(a){var c,b;try{c=JSON.parse(a.data),b=c.event||c.method}catch(e){}"ready"!=b||k||(k=!0);if(!/^https?:\/\/player.vimeo.com/.test(a.origin))return!1;"*"===h&&(h=a.origin);a=c.value;var m=c.data,f=""===f?null:c.player_id;c=f?d[f][b]:d[b];b=[];if(!c)return!1;void 0!==a&&b.push(a);m&&b.push(m);f&&b.push(f);
+return 0<b.length?c.apply(null,b):c.call()}function n(a,c,b){b?(d[b]||(d[b]={}),d[b][a]=c):d[a]=c}var d={},k=!1,h="*";e.fn=e.prototype={element:null,init:function(a){"string"===typeof a&&(a=document.getElementById(a));this.element=a;return this},api:function(a,c){if(!this.element||!a)return!1;var b=this.element,d=""!==b.id?b.id:null,e=c&&c.constructor&&c.call&&c.apply?null:c,f=c&&c.constructor&&c.call&&c.apply?c:null;f&&n(a,f,d);g(a,e,b);return this},addEvent:function(a,c){if(!this.element)return!1;
+var b=this.element,d=""!==b.id?b.id:null;n(a,c,d);"ready"!=a?g("addEventListener",a,b):"ready"==a&&k&&c.call(null,d);return this},removeEvent:function(a){if(!this.element)return!1;var c=this.element,b=""!==c.id?c.id:null;a:{if(b&&d[b]){if(!d[b][a]){b=!1;break a}d[b][a]=null}else{if(!d[a]){b=!1;break a}d[a]=null}b=!0}"ready"!=a&&b&&g("removeEventListener",a,c)}};e.fn.init.prototype=e.fn;window.addEventListener?window.addEventListener("message",l,!1):window.attachEvent("onmessage",l);return window.Froogaloop=
+window.$f=e}();
+
 $(document).foundation();
 
 $(document).ready(function(){
@@ -19,7 +25,28 @@ $(document).ready(function(){
             imagesBuffer[i].src = "img/" + preloadImages.arguments[i]
         }
     };
-            
+      
+    function throttle(callback, delay) {
+        var last;
+        var timer;
+        return function () {
+            var context = this;
+            var now = +new Date();
+            var args = arguments;
+            if (last && now < last + delay) {
+                // le délai n'est pas écoulé on reset le timer
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    last = now;
+                    callback.apply(context, args);
+                }, delay);
+            } else {
+                last = now;
+                callback.apply(context, args);
+            }
+        };
+    };
+
     var shuffle = function(arrayItem) {
       var i = arrayItem.length, j, temp;
       if ( i == 0 ) return arrayItem;
@@ -33,7 +60,7 @@ $(document).ready(function(){
     };
 
     if (navigator.platform.indexOf("Mac")!=-1) {
-        $("<style type='text/css'> body .button{ padding: .7em 1.2em .6em; } </style>").appendTo("head");
+        $("<style type='text/css'> body .button{ padding: .5em 1.2em .4em; } </style>").appendTo("head");
     }
     
     $('#facebook-nav-link').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=http://visagesdemigrants.lacimade.org');
@@ -84,8 +111,11 @@ $(document).ready(function(){
     $('.personna-mobile-info a').click(function(e){
         var $parent = $(this).parent().parent();
         $parent.find('.personna-content, .personna-menu').css('display', 'block');
+        $parent.find('.active').removeClass('active');
         $parent.find('.personna-menu a:eq(0), .personna-content article:eq(0)').addClass('active');
-        $parent.addClass('parcours-bg');
+        
+        var index = $parent.parent().attr('id').replace('personna-section-','');
+        if(index == 3 || index == 5 || index == 6) $parent.addClass('parcours-bg');
         
         var offset = $parent.find('.personna-menu').offset().top - 20;
         $('html,body').animate({
@@ -99,12 +129,12 @@ $(document).ready(function(){
         return false;
     });
     
-    var initialScrollLength = 6e3,
+    var initialScrollLength = 3.5e3,
         initialScroll = $(window).scrollTop(),
         scrollEnabled = false;
     
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        initialScrollLength = 1.5e3;
+        initialScrollLength = 1.2e3;
     }
         
         
@@ -152,7 +182,7 @@ $(document).ready(function(){
         $(document).on('touchend', function(event){
             var distance = yDistance;
 
-            mousewheel({ 'wheelDeltaY': distance, 'disableThrottle': true });  
+            mousewheel({ 'wheelDeltaY': distance, 'disableThrottle': false });  
             
             /*
             // throttle
@@ -191,9 +221,13 @@ $(document).ready(function(){
             scrollTop: 0
         }, 0);
         
-        $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p,'
-           + '#section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').css('display', 'none');
+        $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p, #section-1-part-1 div'
+           + '#section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeOut(0);
 
+        var $bgElement = $('#section-1 > .inner-bg'),
+            bgZoomIncrease = .4,
+            lastStepPassed = false;
+        
         function mousewheel(e) {
             var windowScroll = $(window).scrollTop();
 
@@ -221,32 +255,53 @@ $(document).ready(function(){
 
             if (initialScroll < initialScrollLength) {
                 scrollEnabled = false;
+                lastStepPassed = false;
+
+                if(initialScroll == 0) {
+                    $bgElement.css('transform', 'scale(1)');
+                } else {
+                    $bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease * (initialScroll / initialScrollLength)) ) + ')');
+                }
                 
-                if(initialScroll > ((4/6) * initialScrollLength) + 400) {
+                if(initialScroll > ((4.6/6) * initialScrollLength)) {
+                    //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(5/6)) ) + ')');
                     $('#section-1-part-1').fadeOut(0);
                     $('#section-1-part-1 p').fadeIn(0);
-                    $('#section-1-part-2, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
+                    $('#section-1-part-2, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
                 } else if(initialScroll > (4/6) * initialScrollLength) {
+                    //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(4/6)) ) + ')');
                     $('#section-1-part-1').fadeOut(200);
                     $('#section-1-part-1 p').fadeIn(0);
                     $('#section-1-part-2').fadeOut(100);
                 } else if (initialScroll > (3/6) * initialScrollLength) {
+                    //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(3/6)) ) + ')');
                     $('#section-1-part-2').fadeOut(0);
                     $('#section-1-part-1').fadeIn(200);
                     $('#section-1-part-1 p:eq(2)').fadeIn(600);
                 } else if (initialScroll > (2/6) * initialScrollLength) {
+                    //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(2/6)) ) + ')');
                     $('#section-1-part-1 p:eq(2):visible').fadeOut(600);
                     $('#section-1-part-1 p:eq(1)').fadeIn(600);
                 } else if (initialScroll > (1/12) * initialScrollLength) {
+                    //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(1/12)) ) + ')');
                     $('#section-1-part-1 p:eq(1):visible').fadeOut(600);
                     $('#section-1-part-1').fadeIn(600);
                     $('#section-1-part-1 p:eq(0)').fadeIn(600);
                 } else if( initialScroll < 5) {
+                    //$bgElement.css('transform', 'scale(1)');
+                    
                     $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p,'
                         + '#section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeOut(200);
                 }
             } else {
                 scrollEnabled = true;
+                if(!lastStepPassed) {
+                    lastStepPassed = true;
+                    $('#section-1-part-1').fadeOut(1);
+                    $('#section-1-part-1 p').fadeIn(1);
+                    $('#section-1-part-2, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
+                    $bgElement.css('transform', 'scale(' + ( 1 + bgZoomIncrease ) + ')');
+                }
             }
             
             if(!scrollEnabled) {
@@ -350,16 +405,36 @@ $(document).ready(function(){
         });
     };
     
+    var $fPlayer = null;
+    
     var closeFilm = function(){
         $('html').removeClass('fullscreen');
         isScrolling = true;
         $('html,body').scrollTop(0);
         isScrolling = false;
         $('#main-video').css('display', 'none');
+        
+        if($fPlayer && $fPlayer.removeEvent){
+            $fPlayer.removeEvent('finish');
+        }
+        
         var $iframe = $('#main-video iframe');
         $iframe.attr('data-src', $iframe.attr('src')).attr('src', '');
         initWaypoints();
         headerAnimStart();
+    };
+    
+    var loadVideoEvents = function() {
+        $('#main-video iframe').on('load', function(){
+            $fPlayer = $f($('#main-video iframe')[0]);
+
+            // When the player is ready, add listeners for pause, finish, and playProgress
+            $fPlayer.addEvent('ready', function() {
+                $fPlayer.addEvent('finish', function(){
+                    closeFilm();
+                });
+            });
+        });
     };
     
     var openFilm = function(){
@@ -374,6 +449,7 @@ $(document).ready(function(){
     
     $('#skip-link').click(closeFilm);
     $('#watch-film').click(openFilm);
+    loadVideoEvents();
     
     if(document.location.href.indexOf('bypass_intro') > 0) {
         closeFilm();
