@@ -230,7 +230,8 @@ $(document).ready(function(){
 
         var $bgElement = $('#section-1 > .inner-bg'),
             bgZoomIncrease = .4,
-            lastStepPassed = false;
+            lastStepPassed = false,
+            mobileButtonEnabled = false;
         
         function mousewheel(e) {
             var windowScroll = $(window).scrollTop();
@@ -265,6 +266,13 @@ $(document).ready(function(){
                 scrollEnabled = false;
                 lastStepPassed = false;
 
+                if(mobileButtonEnabled) {
+                    if(isMobileWidth()) {
+                        $('#main-mobile-header').removeClass('scrolled');
+                    }
+                    mobileButtonEnabled = false;
+                }
+                
                 if(initialScroll == 0) {
                     $bgElement.css('transform', 'scale(1)');
                 } else {
@@ -309,6 +317,13 @@ $(document).ready(function(){
                     $('#section-1-part-1 p').fadeIn(1);
                     $('#section-1-part-2, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
                     $bgElement.css('transform', 'scale(' + ( 1 + bgZoomIncrease ) + ')');
+                }
+                
+                if(!mobileButtonEnabled){
+                    if(isMobileWidth()){
+                        $('#main-mobile-header').addClass('scrolled');
+                    }
+                    mobileButtonEnabled = true;
                 }
             }
             
