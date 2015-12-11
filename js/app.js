@@ -227,16 +227,20 @@ $(document).ready(function(){
 
         var $bgElement = $('#section-1 > .inner-bg'),
             bgZoomIncrease = .4,
+            timer,
             disabled = document.location.hash.length && document.location.hash != '#section-1' ? false : true,
             lastStepPassed = false,
             mobileButtonEnabled = false;
         
         function mousewheel(e) {
             if(disabled && e.autoScroll !== true) {
+                /*
                 e.preventDefault && e.preventDefault();
                 e.stopPropagation && e.stopPropagation();
                 e.returnValue = false;
                 return false;
+                */
+                clearInterval(timer);
             }
             
             var windowScroll = $(window).scrollTop();
@@ -340,16 +344,16 @@ $(document).ready(function(){
         }
         
         if(disabled) {
-            var autostep = 7,
-                k = 0,
-                timer = setInterval(function(){
-                    k += autostep;
-                    mousewheel({ wheelDeltaY: -autostep, autoScroll: true });
-                    if(k >= initialScrollLength) {
-                        disabled = false;
-                        clearInterval(timer);
-                    }
-                },40);
+            var autostep = 8,
+                k = 0;
+            timer = setInterval(function(){
+                k += autostep;
+                mousewheel({ wheelDeltaY: -autostep, autoScroll: true });
+                if(k >= initialScrollLength) {
+                    disabled = false;
+                    clearInterval(timer);
+                }
+            },40);
         }
 
         var body = $("body").get(0);
