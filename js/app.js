@@ -26,6 +26,7 @@ $(document).ready(function(){
             if(j < i) {
                 return;
             }
+            $(window).trigger('resize').trigger('scroll');
         }
         
         for (; i < preloadImages.arguments.length; i++) {
@@ -228,7 +229,7 @@ $(document).ready(function(){
         var $bgElement = $('#section-1 > .inner-bg'),
             bgZoomIncrease = .4,
             timer,
-            disabled = document.location.hash.length && document.location.hash != '#section-1' ? false : true,
+            disabled = document.location.hash.length > 1 && document.location.hash != '#section-1' ? false : true,
             lastStepPassed = false,
             mobileButtonEnabled = false;
         
@@ -346,14 +347,17 @@ $(document).ready(function(){
         if(disabled) {
             var autostep = 8,
                 k = 0;
-            timer = setInterval(function(){
-                k += autostep;
-                mousewheel({ wheelDeltaY: -autostep, autoScroll: true });
-                if(k >= initialScrollLength) {
-                    disabled = false;
-                    clearInterval(timer);
-                }
-            },40);
+                
+            setTimeout(function(){
+                timer = setInterval(function(){
+                    k += autostep;
+                    mousewheel({ wheelDeltaY: -autostep, autoScroll: true });
+                    if(k >= initialScrollLength) {
+                        disabled = false;
+                        clearInterval(timer);
+                    }
+                },40);
+            }, 500);
         }
 
         var body = $("body").get(0);
@@ -466,7 +470,14 @@ $(document).ready(function(){
                  }
                  
                  $('#main-nav #nav-states li a.active, #home-link.active').removeClass('active');
-                 $('#main-nav #nav-states li a[href="#' + this.element.id + '"]').addClass('active');
+                 var elTarget = el.id;
+                 for(var eie in sectionNameMap) {
+                    if(sectionNameMap.hasOwnProperty(eie)) {
+                        if(sectionNameMap[eie] == elTarget) elTarget = eie;
+                    }
+                 }
+                 
+                 $('#main-nav #nav-states li a[href="#' + elTarget + '"]').addClass('active');
               }
             });
         });
@@ -476,8 +487,14 @@ $(document).ready(function(){
             $(this).waypoint({
               handler: function(direction) {
                  if(isScrolling) return;
+                 var elTarget = id;
+                 for(var eie in sectionNameMap) {
+                    if(sectionNameMap.hasOwnProperty(eie)) {
+                        if(sectionNameMap[eie] == elTarget) elTarget = eie;
+                    }
+                 }
                  $('#main-nav #nav-states li a.active, #home-link.active').removeClass('active');
-                 $('#main-nav #nav-states li a[href="#' + id + '"]').addClass('active');
+                 $('#main-nav #nav-states li a[href="#' + elTarget + '"]').addClass('active');
               }
             });
         });
@@ -539,7 +556,7 @@ $(document).ready(function(){
 
     /*if(document.location.href.indexOf('bypass_intro') > 0) {
         closeFilm();*/ 
-    if(document.location.hash.length > 0) {
+    if(document.location.hash.length > 1) {
         closeFilm();
         
         var target, $target, mapSection;
@@ -713,6 +730,9 @@ $(document).ready(function(){
         "section-menu-icons.png",
         "personna-foot-bg.png",
         "sub-menu-bg.jpg",
+        "section-3-bg.jpg",
+        "section-4-bg.jpg",
+        "section-5-bg.jpg",
         "anim-4-arrow.png",
         "anim-1-bg.png",
         "anim-4-bg.png",
