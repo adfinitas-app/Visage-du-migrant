@@ -4570,6 +4570,27 @@ h6 {
             transform: translateY(-50%);
 }
 
+#menu-temoignages:hover > #submenu {
+    display: block;
+}
+
+#submenu {
+    background: #9d1710;
+    left: 50%;
+    position: absolute;
+    display: none;
+    width: 480px;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+
+#submenu li {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+    padding: 15px 0;
+}
+
 #social-links {
     position: fixed;
     top: 95px;

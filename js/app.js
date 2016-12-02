@@ -387,6 +387,12 @@ $(document).ready(function(){
                 } else {
                     target = this.hash;
                 }
+                
+                if(target == '#section-2') {
+                    $('#section-2 .active').removeClass('active');
+                    $('#section-2').find('.section-2-menu a:eq(0), .section-2-content article:eq(0)').addClass('active');
+                }
+                
                 $target = $(target);
                 $target = $target.length ? $target : $('[name=' + this.hash.slice(1) + ']');
                 if ($target.length) {
