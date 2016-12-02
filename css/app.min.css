@@ -6351,6 +6351,15 @@ li {
     list-style-type: none!important
 }
 @media screen and (max-width: 650px) {
+    #main-video #skip-link {
+      left: 50%;
+      margin-left: -100px;
+      right: auto;
+      bottom: 8%;
+      width: 200px;
+      top: auto;
+    }
+
     #section-2 {
         display: none;
     }
