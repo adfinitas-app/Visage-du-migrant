@@ -4757,8 +4757,8 @@ h2 {
 }
 #section-2 {
     overflow: hidden;
-    min-height: 840px;
-    padding: 104px 0 180px;
+    min-height: 700px;
+    padding: 104px 0 30px;
     width: 1350px;
     max-width: 100%;
     min-width: 100%;
@@ -5483,7 +5483,7 @@ h2 {
     min-height: 627px
 }
 #section-2 .large-12 {
-    min-height: 830px;
+    min-height: 700px;
 }
 
 #personna-section-6, #personna-section-6 .large-12 {
