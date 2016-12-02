@@ -153,17 +153,18 @@ $(document).ready(function(){
         'francis': 'personna-section-2',
         'ammar': 'personna-section-3',
         'joseph': 'personna-section-4',
-        'reva': 'personna-section-5',
-        'issa': 'personna-section-6',
+        'ibrahima': 'personna-section-5',
+        'mariame': 'personna-section-6',
         'aider': 'section-3',
         'engagement': 'section-4',
         'soutenir': 'section-5',
-        'top': 'section-1'
+        'top': 'section-1',
+        'chiffres': 'section-2'
     };
     
     if(!isMobileWidth()){ 
         $('.personna-section li:first-child a, .personna-section li:first-child article').addClass('active');
-        $('#personna-section-3 > div, #personna-section-5 > div, #personna-section-6 > div').addClass('parcours-bg');
+        $('#personna-section-3 > div').addClass('parcours-bg');
     } else {
         $("<style type='text/css'> #section-1 .inner-bg { transition: all .3s ease-in-out; } </style>").appendTo("head");
     }
@@ -221,10 +222,10 @@ $(document).ready(function(){
             scrollTop: 0
         }, 0);
         
-        $('#section-1-part-1, #section-1-part-1 .button, #section-1-part-2, #section-1-part-1 p, #section-1-part-1 div'
+        /*$('#section-1-part-1, #section-1-part-1 .button, #section-1-part-2, #section-1-part-1 p, #section-1-part-1 div'
            + '#section-1-part-2 p, #section-1-part-2 .button, #section-1-part-2 span, #section-1-part-2 small').fadeOut(0);
            
-        $('#section-1-part-1, #section-1-part-1 p:eq(0), #section-1-part-1 .button').fadeIn(600);
+        $('#section-1-part-1, #section-1-part-1 p:eq(0), #section-1-part-1 .button').fadeIn(600);*/
 
         var $bgElement = $('#section-1 > .inner-bg'),
             bgZoomIncrease = .4,
@@ -272,8 +273,8 @@ $(document).ready(function(){
             }
 
             if (initialScroll < initialScrollLength) {
-                scrollEnabled = false;
-                lastStepPassed = false;
+                scrollEnabled = true;
+                lastStepPassed = true;
 
                 if(mobileButtonEnabled) {
                     if(isMobileWidth()) {
@@ -282,13 +283,13 @@ $(document).ready(function(){
                     mobileButtonEnabled = false;
                 }
                 
-                if(initialScroll == 0) {
+                /*if(initialScroll == 0) {
                     $bgElement.css('transform', 'scale(1)');
                 } else {
                     $bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease * (initialScroll / initialScrollLength)) ) + ')');
-                }
+                }*/
                 
-                if(initialScroll > ((5/6) * initialScrollLength)) {
+                /*if(initialScroll > ((5/6) * initialScrollLength)) {
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(5/6)) ) + ')');
                     $('#section-1-part-1').fadeOut(0);
                     $('#section-1-part-1 p').fadeIn(0);
@@ -307,12 +308,13 @@ $(document).ready(function(){
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(2/6)) ) + ')');
                     $('#section-1-part-1 p:eq(2):visible').fadeOut(600);
                     $('#section-1-part-1 p:eq(1)').fadeIn(600);
-                } else /* if (initialScroll > (1/12) * initialScrollLength)*/ {
+                } else /* if (initialScroll > (1/12) * initialScrollLength)*/ /*{
                     //$bgElement.css('transform', 'scale(' + ( 1 + (bgZoomIncrease*(1/12)) ) + ')');
                     $('#section-1-part-1 p:eq(1):visible').fadeOut(600);
                     $('#section-1-part-1').fadeIn(600);
                     $('#section-1-part-1 p:eq(0), #section-1-part-1 .button').fadeIn(600);
-                } /* else if( initialScroll < 5) {
+                }*/
+                /* else if( initialScroll < 5) {
                     //$bgElement.css('transform', 'scale(1)');
                     
                     $('#section-1-part-1, #section-1-part-2, #section-1-part-1 p,'
@@ -322,10 +324,10 @@ $(document).ready(function(){
                 scrollEnabled = true;
                 if(!lastStepPassed) {
                     lastStepPassed = true;
-                    $('#section-1-part-1').fadeOut(1);
-                    $('#section-1-part-1 p').fadeIn(1);
+                    /*$('#section-1-part-1').fadeOut(1);
+                    $('#section-1-part-1 p').fadeIn(1);*/
                     $('#section-1-part-2, #section-1-part-2 div, #section-1-part-2 p, #section-1-part-2 span, #section-1-part-2 small').fadeIn(600);
-                    $bgElement.css('transform', 'scale(' + ( 1 + bgZoomIncrease ) + ')');
+//                    $bgElement.css('transform', 'scale(' + ( 1 + bgZoomIncrease ) + ')');
                 }
                 
                 if(!mobileButtonEnabled){
@@ -389,18 +391,17 @@ $(document).ready(function(){
                 $target = $target.length ? $target : $('[name=' + this.hash.slice(1) + ']');
                 if ($target.length) {
                     isScrolling = true;
-                    
-                    $('#main-nav .active').removeClass('active');
+                    $('#top-menu .active').removeClass('active');
                     $(this).addClass('active');
-
                     scrollEnabled = true;
                     var hash = this.hash;
                     $('html,body').animate({
-                        scrollTop: $target.offset().top
+                        scrollTop: $target.offset().top-$('#top-menu').height()
                     }, 1000, function(){
                         isScrolling = false;
-                        document.location.hash = hash;
-                        initialScroll = initialScrollLength + $target.offset().top;
+                        history.replaceState(null, null, hash);
+//                        document.location.href = hash;
+                        initialScroll = initialScrollLength + $target.offset().top-$('#top-menu').height();
                         mousewheel({ wheelDeltaY: -10, autoScroll: true });
                     });
                     return false;
@@ -565,26 +566,54 @@ $(document).ready(function(){
         } else {
             target = document.location.hash;
         }
+        var targetString = target;
         if(target != 'section-1') {
             target = $(target);
             target = target.length ? target : $('[name=' + document.location.hash.slice(1) + ']');
             if (target.length) {
                 isScrolling = true;
                 
-                $('#main-nav .active').removeClass('active');
-                $(this).addClass('active');
+                $('#top-menu .active').removeClass('active');
+                $('#top-menu a[href="' + targetString + '"]').addClass('active');
 
                 scrollEnabled = true;
                 $('html,body').animate({
-                    scrollTop: target.offset().top
+                    scrollTop: target.offset().top-$('#top-menu').height()
                 }, 1000, function(){
                     isScrolling = false;
-                    initialScroll = initialScrollLength + target.offset().top;
+                    initialScroll = initialScrollLength + target.offset().top-$('#top-menu').height();
                 });
             }
          }
     }
     /*}*/
+
+    $('#section-2').find('.section-2-menu a').click(function(e){
+        e.preventDefault();
+        if($(this).hasClass('active')) {
+            var $el2 = $('#section-2').find('.active');
+            $('#section-2').find('.parcours-bg').removeClass('parcours-bg');
+            $('#section-2').find('article.active').animate({'opacity': 0}, 100, function(){ $el2.removeClass('active'); });
+            return false;
+        }
+
+        $('#section-2').find('.active').removeClass('active');
+        var index = (parseInt($(this)[0].className.replace('icon-','')) - 1);
+        var $art = $('#section-2').find('.section-2-content article:eq(' + index + ')');
+        $art.css('opacity', 0);
+        $art.addClass('active');
+        $art.animate({'opacity': 1}, 100);
+        $(this).addClass('active');
+//        $($('#section-2').children()[0]).removeClass('parcours-bg');
+
+        if(index == 2) { // animations
+            animSection2Vagues();
+        } else if(index == 1) {
+            animSection2Map();
+        }
+
+        return false;
+    });
 
     $('.personna-section').each(function(e, i){
         var $el = $(this);
@@ -618,14 +647,14 @@ $(document).ready(function(){
                 if(personnaIndex == 0){
                     $('#anim-1').addClass('animated');
                 } else if(personnaIndex == 2) {
-                    anim3();
-                } else if(personnaIndex == 3) {
                     anim4();
-                } else if(personnaIndex == 4) {
-                    $('#anim-5').addClass('animated');
-                } else if(personnaIndex == 5) {
+                } /*else if(personnaIndex == 3) {
+                    anim4();
+                }*/ else if(personnaIndex == 4) {
+                    anim6();
+                } /*else if(personnaIndex == 5) {
                     $('#anim-6').addClass('animated');
-                }
+                }*/
             } else if(index == 1) {
                 $($el.children()[0]).addClass('parcours-bg');
             }
@@ -726,15 +755,82 @@ $(document).ready(function(){
         });
     };
     
+    var anim6 = function() {
+        $('#anim-6-layer-1, #anim-6-layer-2, #anim-6-layer-3').css('display', 'none');
+        window.setTimeout(function() { $('#anim-6-layer-1').fadeIn(800) }, 1000);
+        window.setTimeout(function() { $('#anim-6-layer-2').fadeIn(800) }, 1800);
+        window.setTimeout(function() { $('#anim-6-layer-3').fadeIn(800) }, 2600);
+    }
+
+    var animSection2Map = function() {
+        $('.layer-anim-section-2-map').css('display', 'none');
+        window.setTimeout(function() { $('#map-1').fadeIn(800) }, 800);
+        window.setTimeout(function() { $('#map-2').fadeIn(800) }, 1000);
+        window.setTimeout(function() { $('#map-3').fadeIn(800) }, 1400);
+        window.setTimeout(function() { $('#map-4').fadeIn(800) }, 1600);
+        window.setTimeout(function() { $('#map-5').fadeIn(800) }, 2000);
+        window.setTimeout(function() { $('#map-6').fadeIn(800) }, 2200);
+        window.setTimeout(function() { $('#map-7').fadeIn(800) }, 2600);
+        window.setTimeout(function() { $('#map-8').fadeIn(800) }, 2800);
+        window.setTimeout(function() { $('#map-9').fadeIn(800) }, 3200);
+        window.setTimeout(function() { $('#map-10').fadeIn(800) }, 3400);
+        window.setTimeout(function() { $('#map-11').fadeIn(800) }, 3800);
+        window.setTimeout(function() { $('#map-12').fadeIn(800) }, 4000);
+    }
+
+    var animSection2Vagues = function() {
+        animBateau();
+        animVagues();
+    }
+
+    var animBateau = function() {
+        if($('#bateau').css('bottom') == '-10px') {
+            $('#bateau').animate({bottom: 0}, 800, function() {animBateau()});
+        }
+        else {
+            $('#bateau').animate({bottom: '-10px'}, 800, function() {animBateau()});
+        }
+    }
+
+    var animVagues = function() {
+        if($('#vagues').css('bottom') == '-10px') {
+            $('#vagues').animate({bottom: 0, left: 0}, 800, function() {animVagues()});
+        }
+        else {
+            $('#vagues').animate({bottom: '-10px', left: '10px'}, 800, function() {animVagues()});
+        }
+    }
+
+    $('#personna-section-5 .icon-3').on('click', function() {
+        if(!$('#anim-2-2').hasClass('active')) {
+            window.setTimeout(function() {
+                $('#anim-2-2-1').fadeIn(400);
+            }, 1000);
+            window.setTimeout(function() {
+                $('#anim-2-2-2').fadeIn(400);
+            }, 1800);
+            window.setTimeout(function() {
+                $('#anim-2-2-3').fadeIn(400);
+            }, 2600);
+        }
+    })
+
     preloadImages(
         "section-menu-icons.png",
         "personna-foot-bg.png",
         "sub-menu-bg.jpg",
+        "section-2-bg.jpg",
+        "section-menu-icons.png",
+        "section-2-menu-left.png",
+        "section-2-menu-right.png",
+        "line-section-2-menu.png",
         "section-3-bg.jpg",
         "section-4-bg.jpg",
         "section-5-bg.jpg",
         "anim-4-arrow.png",
         "anim-1-bg.png",
+        "anim-2-2.png",
+        "anim-2-2-2.png",
         "anim-4-bg.png",
         "anim-2-sprite.png",
         "anim-5-mask.png",
@@ -752,4 +848,6 @@ $(document).ready(function(){
         "personna-5-content-bg.png",
         "personna-6-content-bg.png"
     );
+
+    $('#section-2').find('.section-2-menu a:eq(0), .section-2-content article:eq(0)').addClass('active');
 });

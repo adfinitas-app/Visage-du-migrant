@@ -74,4 +74,6 @@ $(document).ready(function(){
         });
     };
     
+    // TMP
+    $('#engagement-section-1').css('minHeight', screen.width*618/1091);
 });
