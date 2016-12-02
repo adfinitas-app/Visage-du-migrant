@@ -6096,7 +6096,7 @@ h2 {
     cursor: pointer
 }
 #engagement-section-1 iframe {
-    display: none;
+    display: block;
     opacity: 0;
     position: absolute;
     top: 0;
